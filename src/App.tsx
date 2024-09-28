@@ -1,12 +1,14 @@
 import './App.css'
-import { Quote } from './Qoute/Quote'
+import { Container } from './components/Container/Container'
+import { Quote } from './components/Qoute/Quote'
+
 
 function App() {
 
   return (
-    <>
+    <Container>
       <Quote />
-    </>
+    </Container>
   )
 }
 
