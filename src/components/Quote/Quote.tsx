@@ -4,17 +4,20 @@ import { Button } from "../Button/Button";
 import { quoteAPI } from "../../api/api";
 import { FaFacebook} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
+import { LangSwitcher } from "../LangSwitcher/LangSwitcher";
+
 
 
 export const Quote = () => {
     const [quote, setQoute] = useState<{content: string; author: string} | null>(null)
     const [copy, setCopy] = useState<string | null>(null)
     const [scale, setScale] = useState<number>(1);
-
+    const { t } = useTranslation(); 
     const fetchQuote = async () => {
         try {
             await quoteAPI.getRandomQuote(setQoute, setCopy);
-            setScale(1.1); // увеличиваем размер
+            setScale(1.1);
             setTimeout(() => setScale(1), 300);
         } catch (error) {
             console.error("Error fetching new quote:", error);
@@ -40,13 +43,14 @@ export const Quote = () => {
                                     <FaFacebook className="w-6 h-6" /> 
                                 </Button>
                 </div>
-                <Button name="New quote" onClick={fetchQuote} />
+                <Button name={t('copy_quote')} copyText={copy} />
+                <LangSwitcher />
             </div>
             <div className="max-w-lg mx-auto">
                 <q className="text-xl font-semibold mb-2 block">"{quote.content}"</q>
                 <p className="text-gray-600 font-mono">- {quote.author}</p>
             </div>
-            <Button name="Copy quote" copyText={copy} className="mt-6 transition delay-150 duration-300 ease-in-out" />
+            <Button name={t('new_quote')} onClick={fetchQuote}  className="mt-6"/>
         </div>
         }
     </article>
