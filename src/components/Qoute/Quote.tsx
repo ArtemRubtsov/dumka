@@ -9,11 +9,13 @@ import { FaXTwitter } from "react-icons/fa6";
 export const Quote = () => {
     const [quote, setQoute] = useState<{content: string; author: string} | null>(null)
     const [copy, setCopy] = useState<string | null>(null)
+    const [scale, setScale] = useState<number>(1);
 
     const fetchQuote = async () => {
         try {
-            const newQuote = await quoteAPI.getRandomQuote(setQoute, setCopy);
-            console.log("Fetched new quote:", newQuote);
+            await quoteAPI.getRandomQuote(setQoute, setCopy);
+            setScale(1.1); // увеличиваем размер
+            setTimeout(() => setScale(1), 300);
         } catch (error) {
             console.error("Error fetching new quote:", error);
         }
@@ -22,25 +24,29 @@ export const Quote = () => {
         fetchQuote()
     },[])
 
+    const tweetUrl = quote ? `https://x.com/intent/tweet?text="${encodeURIComponent(quote.content)}" - ${encodeURIComponent(quote.author)}` : '';
+    const facebookShareUrl = quote ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://yourwebsite.com')}&quote="${encodeURIComponent(quote.content)}" - ${encodeURIComponent(quote.author)}` : '';
   return (
     <article className="bg-gray-100 p-4 rounded shadow-lg text-center flex items-center justify-center h-64">
         {!quote ? 
             <Loader /> : 
-            <div className="w-full">
+            <div className={`w-full transform transition-transform duration-300 ${scale === 1.1 ? "scale-110" : "scale-100"}`}>
             <div className="flex justify-between mb-4">
                 <div className="space-x-2 flex">
-                                <Button as="a" href='https://x.com/home' target="blank" className="p-2">
+                                <Button as="a" href={tweetUrl} target="_blank" className="p-2">
                                     <FaXTwitter className="w-6 h-6" /> 
                                 </Button>
-                                <Button as="a" className="p-2">
+                                <Button as="a" href={facebookShareUrl} target={"_blank"} className="p-2">
                                     <FaFacebook className="w-6 h-6" /> 
                                 </Button>
                 </div>
                 <Button name="New quote" onClick={fetchQuote} />
             </div>
-            <q className="text-xl font-semibold mb-2 block">"{quote.content}"</q>
-            <p className="text-gray-600 font-mono">- {quote.author}</p>
-            <Button name="Copy quote" copyText={copy} />
+            <div className="max-w-lg mx-auto">
+                <q className="text-xl font-semibold mb-2 block">"{quote.content}"</q>
+                <p className="text-gray-600 font-mono">- {quote.author}</p>
+            </div>
+            <Button name="Copy quote" copyText={copy} className="mt-6 transition delay-150 duration-300 ease-in-out" />
         </div>
         }
     </article>
