@@ -9,3 +9,4 @@ export const Container = ({children}: Container) => {
     <main className='bg-lime-200 h-screen w-full flex items-center justify-center box-border'>{children}</main>
   )
 }
+// bg-lime-200
