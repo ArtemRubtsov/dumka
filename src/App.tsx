@@ -5,8 +5,6 @@ import './i18n';
 import '@rubtsov/ui-components-react/dist/style.css'
 
 function App() {
-
-
   return (
     <Container>
       <Quote />
